@@ -1,0 +1,99 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // Administrador: por documento en la colección "admins" o por correo oficial maestro
+    function isAdmin() {
+      return signedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        request.auth.token.email in ['admin@agrovida.com', 'admin@gmail.com']
+      );
+    }
+
+    // Colección de Administradores
+    match /admins/{uid} {
+      allow get: if isOwner(uid) || isAdmin();
+      allow list, create, update, delete: if false;
+    }
+
+    // Usuarios y Agricultores
+    match /users/{uid} {
+      allow get: if isOwner(uid) || isAdmin();
+      allow list: if isAdmin();
+      
+      // Alta de usuario: el propio agricultor al registrarse o el Admin desde su panel
+      allow create: if isAdmin() || (
+        isOwner(uid)
+        && request.resource.data.uid == uid
+        && request.resource.data.role == 'agricultor'
+        && request.resource.data.status == 'activo'
+      );
+      
+      // Actualización de datos de perfil
+      allow update: if isAdmin()
+        || (isOwner(uid)
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['name', 'phone', 'location', 'photoURL', 'status']));
+                 
+      // Eliminación de usuarios: reservada exclusivamente al administrador
+      allow delete: if isAdmin();
+    }
+
+    // Parcelas y Cultivos de los agricultores
+    match /cultivos/{id} {
+      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if signedIn() && (request.resource.data.userId == request.auth.uid || isAdmin());
+      allow update: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow delete: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // Historial Fitosanitario y Diagnósticos de la IA (SOLO EL ADMIN PUEDE BORRAR)
+    match /historial/{id} {
+      allow read: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if signedIn() && (request.resource.data.userId == request.auth.uid || isAdmin());
+      allow update: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow delete: if isAdmin(); // El agricultor no puede borrar su historial, solo el Administrador
+    }
+
+    // Catálogo Oficial de Enfermedades y Patógenos (Lectura abierta para que funcione la IA)
+    match /enfermedades_catalogo/{id} {
+      allow read: if true; // Lectura pública para que la IA y agricultores comparen síntomas
+      allow create, update, delete: if isAdmin(); // Solo el Admin puede agregar o editar fichas
+    }
+
+    // Biblioteca Agrícola y Guías Técnicas
+    match /guias_agricolas/{id} {
+      allow read: if true; // Lectura pública para consulta en campo
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Alertas Fitosanitarias Oficiales del Valle
+    match /alertas/{id} {
+      allow read: if true; // Lectura pública para que todos los agricultores reciban avisos
+      allow create, update, delete: if isAdmin(); // Solo el Admin puede emitir alertas
+    }
+
+    // Finanzas, Gastos e Insumos de Parcelas
+    match /finanzas/{id} {
+      allow read, write: if signedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // Bitácora de Auditoría del Administrador
+    match /auditoria/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    // Bloqueo de seguridad preventivo para cualquier otra ruta
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

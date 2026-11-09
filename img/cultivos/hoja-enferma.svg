@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" fill="none">
+  <rect width="240" height="180" rx="12" fill="#F1F6F0"/>
+  <!-- Leaf Stem -->
+  <path d="M120 170 Q120 130 115 10" stroke="#33691E" stroke-width="4.5" stroke-linecap="round"/>
+  
+  <!-- Leaf Main Blade (infected leaf: yellowing edges, necrotic spots, cercospora / tizón) -->
+  <path d="M115 12 C160 30 205 75 190 125 C175 155 135 155 120 165 C105 155 65 155 50 125 C35 75 80 30 115 12 Z" fill="#7CB342" stroke="#33691E" stroke-width="2.5"/>
+  
+  <!-- Chlorosis / Yellow halos spreading -->
+  <path d="M115 15 C135 40 175 70 170 100 C150 70 130 50 115 35 Z" fill="#DCE775" opacity="0.8"/>
+  <path d="M115 25 C95 45 65 75 70 110 C85 80 100 55 115 40 Z" fill="#C0CA33" opacity="0.75"/>
+  <ellipse cx="145" cy="95" rx="35" ry="22" fill="#DCE775" opacity="0.6"/>
+
+  <!-- Veins -->
+  <path d="M116 35 Q145 45 165 42" stroke="#AED581" stroke-width="2"/>
+  <path d="M116 55 Q155 65 180 70" stroke="#AED581" stroke-width="2"/>
+  <path d="M116 80 Q155 95 175 110" stroke="#AED581" stroke-width="2"/>
+  <path d="M116 110 Q145 125 160 140" stroke="#AED581" stroke-width="2"/>
+  <path d="M115 35 Q85 45 65 42" stroke="#AED581" stroke-width="2"/>
+  <path d="M115 55 Q75 65 52 70" stroke="#AED581" stroke-width="2"/>
+  <path d="M115 80 Q75 95 55 110" stroke="#AED581" stroke-width="2"/>
+  <path d="M115 110 Q85 125 70 140" stroke="#AED581" stroke-width="2"/>
+
+  <!-- Necrotic Disease lesions / spots (Mancha foliar / Tizón) -->
+  <!-- Spot 1 (Large lesion with concentric rings) -->
+  <ellipse cx="140" cy="85" rx="18" ry="14" fill="#6D4C41"/>
+  <ellipse cx="140" cy="85" rx="14" ry="10" fill="#4E342E"/>
+  <ellipse cx="140" cy="85" rx="7" ry="5" fill="#3E2723"/>
+  <circle cx="140" cy="85" r="22" stroke="#FBC02D" stroke-width="3" stroke-dasharray="4 2"/>
+
+  <!-- Spot 2 -->
+  <ellipse cx="80" cy="95" rx="14" ry="11" fill="#5D4037"/>
+  <ellipse cx="80" cy="95" rx="10" ry="7" fill="#3E2723"/>
+  <circle cx="80" cy="95" r="17" stroke="#FDD835" stroke-width="2.5"/>
+
+  <!-- Spot 3 -->
+  <ellipse cx="120" cy="50" rx="9" ry="7" fill="#4E342E"/>
+  <circle cx="120" cy="50" r="12" stroke="#FBC02D" stroke-width="2"/>
+
+  <!-- Smaller scattered spots -->
+  <circle cx="160" cy="120" r="6" fill="#4E342E" stroke="#FDD835" stroke-width="1.5"/>
+  <circle cx="70" cy="65" r="5" fill="#5D4037" stroke="#FDD835" stroke-width="1.5"/>
+  <circle cx="100" cy="125" r="6.5" fill="#4E342E" stroke="#FDD835" stroke-width="1.5"/>
+</svg>

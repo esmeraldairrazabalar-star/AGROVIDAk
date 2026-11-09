@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <clipPath id="circleClip">
+      <circle cx="60" cy="60" r="56"/>
+    </clipPath>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A7D7C5"/>
+      <stop offset="1" stop-color="#5C9E7A"/>
+    </linearGradient>
+  </defs>
+  
+  <circle cx="60" cy="60" r="56" fill="url(#bgGrad)" stroke="#2E7D32" stroke-width="3"/>
+  
+  <g clip-path="url(#circleClip)">
+    <!-- Sky & hills background -->
+    <path d="M0 75 Q30 65 60 70 T120 65 L120 120 L0 120 Z" fill="#4B8B3B" opacity="0.3"/>
+    
+    <!-- Torso / Shirt -->
+    <path d="M30 120 L30 100 Q40 92 60 92 Q80 92 90 100 L90 120 Z" fill="#2E5A88"/>
+    <!-- Plaid shirt details -->
+    <path d="M60 92 L60 120" stroke="#E2E8F0" stroke-width="2"/>
+    <path d="M40 98 L80 98" stroke="#E2E8F0" stroke-width="1.5"/>
+    <path d="M36 108 L84 108" stroke="#E2E8F0" stroke-width="1.5"/>
+    <!-- Overalls / Suspenders -->
+    <path d="M42 96 L42 120" stroke="#1E3A5F" stroke-width="5"/>
+    <path d="M78 96 L78 120" stroke="#1E3A5F" stroke-width="5"/>
+
+    <!-- Neck -->
+    <rect x="52" y="78" width="16" height="18" fill="#F3B080" rx="4"/>
+    
+    <!-- Face -->
+    <ellipse cx="60" cy="62" rx="20" ry="22" fill="#F9C6A2"/>
+    <!-- Ears -->
+    <ellipse cx="38" cy="64" rx="4" ry="6" fill="#F3B080"/>
+    <ellipse cx="82" cy="64" rx="4" ry="6" fill="#F3B080"/>
+    
+    <!-- Beard & Stubble -->
+    <path d="M45 66 C45 82 50 86 60 86 C70 86 75 82 75 66 C75 74 70 80 60 80 C50 80 45 74 45 66 Z" fill="#4A3525"/>
+    <!-- Mustache -->
+    <path d="M50 72 C55 69 60 72 60 72 C60 72 65 69 70 72 C66 75 61 74 60 74 C59 74 54 75 50 72 Z" fill="#3D2817"/>
+    <!-- Smile -->
+    <path d="M54 77 Q60 81 66 77" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Eyes -->
+    <ellipse cx="52" cy="59" rx="2.5" ry="3" fill="#2C1B10"/>
+    <ellipse cx="68" cy="59" rx="2.5" ry="3" fill="#2C1B10"/>
+    <circle cx="53" cy="58" r="0.8" fill="#FFFFFF"/>
+    <circle cx="69" cy="58" r="0.8" fill="#FFFFFF"/>
+    
+    <!-- Eyebrows -->
+    <path d="M48 54 Q53 52 56 54" stroke="#3D2817" stroke-width="2" stroke-linecap="round"/>
+    <path d="M64 54 Q67 52 72 54" stroke="#3D2817" stroke-width="2" stroke-linecap="round"/>
+    <!-- Nose -->
+    <path d="M60 59 L59 65 L62 65" stroke="#E29B6B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Straw Hat Brim -->
+    <ellipse cx="60" cy="46" rx="38" ry="10" fill="#E6B347" stroke="#BF8823" stroke-width="2"/>
+    <ellipse cx="60" cy="45" rx="32" ry="7" fill="#F3C86A"/>
+    <!-- Straw Hat Crown -->
+    <path d="M40 45 C41 26 44 22 60 22 C76 22 79 26 80 45 Z" fill="#E6B347" stroke="#BF8823" stroke-width="2"/>
+    <!-- Hat ribbon/band -->
+    <path d="M40 43 C46 45 74 45 80 43 L80 39 C74 41 46 41 40 39 Z" fill="#1B4931"/>
+  </g>
+</svg>

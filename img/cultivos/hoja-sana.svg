@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" fill="none">
+  <rect width="240" height="180" rx="12" fill="#F1F8F1"/>
+  <!-- Leaf Stem -->
+  <path d="M120 170 Q120 130 115 10" stroke="#2E7D32" stroke-width="4.5" stroke-linecap="round"/>
+  
+  <!-- Leaf Main Blade (Healthy vibrant lush green) -->
+  <path d="M115 12 C160 30 205 75 190 125 C175 155 135 155 120 165 C105 155 65 155 50 125 C35 75 80 30 115 12 Z" fill="#43A047" stroke="#1B5E20" stroke-width="2.5"/>
+  
+  <!-- Subtle natural healthy shine -->
+  <path d="M115 15 C135 40 160 65 155 95 C140 68 125 50 115 35 Z" fill="#66BB6A" opacity="0.6"/>
+  <ellipse cx="140" cy="85" rx="30" ry="18" fill="#81C784" opacity="0.3"/>
+
+  <!-- Crisp Veins -->
+  <path d="M116 35 Q145 45 165 42" stroke="#A5D6A7" stroke-width="2"/>
+  <path d="M116 55 Q155 65 180 70" stroke="#A5D6A7" stroke-width="2"/>
+  <path d="M116 80 Q155 95 175 110" stroke="#A5D6A7" stroke-width="2"/>
+  <path d="M116 110 Q145 125 160 140" stroke="#A5D6A7" stroke-width="2"/>
+  <path d="M115 35 Q85 45 65 42" stroke="#A5D6A7" stroke-width="2"/>
+  <path d="M115 55 Q75 65 52 70" stroke="#A5D6A7" stroke-width="2"/>
+  <path d="M115 80 Q75 95 55 110" stroke="#A5D6A7" stroke-width="2"/>
+  <path d="M115 110 Q85 125 70 140" stroke="#A5D6A7" stroke-width="2"/>
+
+  <!-- Dew drops -->
+  <ellipse cx="85" cy="85" rx="5" ry="4" fill="#E8F5E9" opacity="0.9"/>
+  <ellipse cx="84" cy="84" rx="2" ry="1.5" fill="#FFFFFF"/>
+  <ellipse cx="150" cy="115" rx="4" ry="3" fill="#E8F5E9" opacity="0.9"/>
+</svg>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" fill="none">
+  <rect width="200" height="150" rx="12" fill="#FAF2F4"/>
+  <!-- Base stem -->
+  <path d="M100 145 L100 45" stroke="#7A8B42" stroke-width="4.5" stroke-linecap="round"/>
+  <!-- Stem leaves -->
+  <path d="M98 120 C75 110 65 95 62 80 C80 90 95 105 98 120 Z" fill="#689F38"/>
+  <path d="M102 110 C125 100 135 85 138 70 C120 80 105 95 102 110 Z" fill="#7CB342"/>
+
+  <!-- Quinoa panicle (panoja de quinua roja/púrpura) clusters -->
+  <!-- Main cluster column -->
+  <!-- Top apex -->
+  <circle cx="100" cy="22" r="9" fill="#C2185B"/>
+  <circle cx="95" cy="28" r="8" fill="#AD1457"/>
+  <circle cx="106" cy="27" r="8.5" fill="#D81B60"/>
+  <circle cx="100" cy="35" r="9.5" fill="#E91E63"/>
+
+  <!-- Middle tier (wider) -->
+  <circle cx="85" cy="42" r="10.5" fill="#C2185B"/>
+  <circle cx="98" cy="46" r="11" fill="#E91E63"/>
+  <circle cx="114" cy="43" r="10.5" fill="#AD1457"/>
+  <circle cx="75" cy="54" r="9" fill="#880E4F"/>
+  <circle cx="90" cy="58" r="11" fill="#D81B60"/>
+  <circle cx="108" cy="57" r="11" fill="#C2185B"/>
+  <circle cx="123" cy="54" r="9" fill="#E91E63"/>
+
+  <!-- Lower tier -->
+  <circle cx="78" cy="70" r="10" fill="#C2185B"/>
+  <circle cx="96" cy="72" r="11.5" fill="#AD1457"/>
+  <circle cx="118" cy="71" r="10" fill="#D81B60"/>
+  <circle cx="84" cy="85" r="9" fill="#880E4F"/>
+  <circle cx="100" cy="87" r="10" fill="#C2185B"/>
+  <circle cx="114" cy="85" r="9.5" fill="#AD1457"/>
+
+  <!-- Detailed tiny quinoa grains dots overlay -->
+  <circle cx="92" cy="30" r="2" fill="#FF80AB"/>
+  <circle cx="104" cy="32" r="2" fill="#FF4081"/>
+  <circle cx="82" cy="46" r="2.2" fill="#F8BBD0"/>
+  <circle cx="96" cy="50" r="2" fill="#FF80AB"/>
+  <circle cx="116" cy="48" r="2.2" fill="#FF4081"/>
+  <circle cx="74" cy="58" r="1.8" fill="#F8BBD0"/>
+  <circle cx="88" cy="62" r="2.2" fill="#FF80AB"/>
+  <circle cx="106" cy="62" r="2" fill="#FF4081"/>
+  <circle cx="120" cy="58" r="1.8" fill="#F8BBD0"/>
+  <circle cx="80" cy="74" r="2" fill="#FF80AB"/>
+  <circle cx="98" cy="76" r="2.2" fill="#F8BBD0"/>
+  <circle cx="114" cy="75" r="2" fill="#FF4081"/>
+</svg>

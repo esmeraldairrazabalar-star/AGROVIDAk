@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" fill="none">
+  <rect width="200" height="150" rx="12" fill="#F4F9F4"/>
+  <!-- Sombra base -->
+  <ellipse cx="100" cy="120" rx="80" ry="16" fill="#DCE8DC" opacity="0.6"/>
+  <!-- Vaina de haba verde gruesa abierta -->
+  <path d="M25 70 C50 45 150 45 175 75 C150 95 50 95 25 70 Z" fill="#4B8B3B" stroke="#2D5A22" stroke-width="2.5"/>
+  <path d="M30 72 C55 52 145 52 170 76 C145 88 55 88 30 72 Z" fill="#88C057"/>
+  <!-- Habas verdes grandes (Vicia faba) -->
+  <!-- Haba 1 -->
+  <ellipse cx="60" cy="72" rx="15" ry="12" fill="#A3D96C" stroke="#3D702A" stroke-width="2"/>
+  <ellipse cx="62" cy="69" rx="10" ry="8" fill="#BCE98D"/>
+  <path d="M52 70 Q55 67 59 70" stroke="#2D5A22" stroke-width="1.5" fill="none"/>
+  <!-- Haba 2 -->
+  <ellipse cx="95" cy="71" rx="16" ry="13" fill="#A3D96C" stroke="#3D702A" stroke-width="2"/>
+  <ellipse cx="97" cy="68" rx="11" ry="8.5" fill="#BCE98D"/>
+  <path d="M87 69 Q90 66 94 69" stroke="#2D5A22" stroke-width="1.5" fill="none"/>
+  <!-- Haba 3 -->
+  <ellipse cx="132" cy="72" rx="15" ry="12" fill="#A3D96C" stroke="#3D702A" stroke-width="2"/>
+  <ellipse cx="134" cy="69" rx="10" ry="8" fill="#BCE98D"/>
+  <path d="M124 70 Q127 67 131 70" stroke="#2D5A22" stroke-width="1.5" fill="none"/>
+  <!-- Haba individual en primer plano -->
+  <g transform="translate(100, 105)">
+    <ellipse cx="0" cy="0" rx="18" ry="14" fill="#9CD464" stroke="#2D5A22" stroke-width="2.2"/>
+    <ellipse cx="2" cy="-3" rx="12" ry="9" fill="#BBE88A"/>
+    <path d="M-10 -2 Q-6 -6 0 -3" stroke="#254D1B" stroke-width="2" stroke-linecap="round" fill="none"/>
+  </g>
+</svg>

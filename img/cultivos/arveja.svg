@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" fill="none">
+  <rect width="200" height="150" rx="12" fill="#F2F9EE"/>
+  <!-- Pod shadow -->
+  <ellipse cx="100" cy="118" rx="70" ry="14" fill="#D3E8CB" opacity="0.6"/>
+
+  <!-- Stem and tendrils -->
+  <path d="M25 60 C32 50 45 52 50 65" stroke="#33691E" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M28 54 C25 40 35 30 42 35 C48 38 42 48 35 45" stroke="#558B2F" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- Closed Pea Pod (back) -->
+  <path d="M48 55 C80 40 135 55 165 85 C140 82 85 70 48 55 Z" fill="#7CB342" stroke="#558B2F" stroke-width="2"/>
+
+  <!-- Open Pea Pod (front) -->
+  <g transform="translate(10, 10)">
+    <!-- Lower pod half -->
+    <path d="M40 70 C75 90 120 90 155 70 C130 98 65 98 40 70 Z" fill="#558B2F" stroke="#33691E" stroke-width="2"/>
+    
+    <!-- Round green peas inside pod -->
+    <!-- Pea 1 -->
+    <circle cx="65" cy="74" r="11" fill="#8BC34A" stroke="#558B2F" stroke-width="1.5"/>
+    <circle cx="62" cy="71" r="3" fill="#DCEDC8"/>
+
+    <!-- Pea 2 -->
+    <circle cx="88" cy="76" r="11.5" fill="#8BC34A" stroke="#558B2F" stroke-width="1.5"/>
+    <circle cx="85" cy="73" r="3" fill="#DCEDC8"/>
+
+    <!-- Pea 3 -->
+    <circle cx="112" cy="76" r="11.5" fill="#9CCC65" stroke="#558B2F" stroke-width="1.5"/>
+    <circle cx="109" cy="73" r="3" fill="#DCEDC8"/>
+
+    <!-- Pea 4 -->
+    <circle cx="134" cy="72" r="10.5" fill="#8BC34A" stroke="#558B2F" stroke-width="1.5"/>
+    <circle cx="131" cy="69" r="2.8" fill="#DCEDC8"/>
+
+    <!-- Upper pod shell curved back -->
+    <path d="M40 70 C70 50 125 50 155 70 C125 60 70 60 40 70 Z" fill="#689F38" stroke="#33691E" stroke-width="1.8"/>
+  </g>
+</svg>

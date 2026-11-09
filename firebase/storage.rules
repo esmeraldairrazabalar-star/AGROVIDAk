@@ -1,0 +1,40 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && (
+        request.auth.token.email in ['admin@agrovida.com', 'admin@gmail.com']
+      );
+    }
+
+    // Fotografías fitosanitarias de plantas analizadas con la IA
+    match /historial/{userId}/{fileName} {
+      allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow write: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin(); // Solo el Admin puede borrar fotografías de auditoría
+    }
+
+    // Fotografías de referencia del catálogo de enfermedades
+    match /enfermedades/{fileName} {
+      allow read: if true; // Lectura pública para que la IA cargue las muestras
+      allow write, delete: if isAdmin();
+    }
+
+    // Fotografías de perfil de agricultores
+    match /avatars/{userId}/{fileName} {
+      allow read: if true;
+      allow write: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if signedIn() && (request.auth.uid == userId || isAdmin());
+    }
+
+    // Bloqueo por defecto para cualquier otro archivo
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

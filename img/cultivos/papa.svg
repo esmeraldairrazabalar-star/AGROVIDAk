@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" fill="none">
+  <rect width="200" height="150" rx="12" fill="#F8F3EA"/>
+  <!-- Field soil shadow -->
+  <ellipse cx="100" cy="115" rx="75" ry="18" fill="#D7C4A8" opacity="0.6"/>
+  
+  <!-- Potato 1 (back left) -->
+  <g transform="translate(30, 48)">
+    <path d="M20 40 C10 20 28 5 50 10 C70 14 85 30 75 55 C65 72 30 65 20 40 Z" fill="#C49A5A" stroke="#9E7638" stroke-width="2.5"/>
+    <!-- Potato eyes / dimples -->
+    <path d="M35 25 Q38 24 41 26" stroke="#7A5623" stroke-width="2" stroke-linecap="round"/>
+    <path d="M55 35 Q59 34 62 37" stroke="#7A5623" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="38" cy="45" r="1.5" fill="#7A5623"/>
+  </g>
+  
+  <!-- Potato 2 (back right) -->
+  <g transform="translate(85, 42)">
+    <path d="M25 45 C15 25 35 12 55 18 C78 24 88 45 80 65 C70 82 40 70 25 45 Z" fill="#D2A86B" stroke="#A77E3F" stroke-width="2.5"/>
+    <path d="M45 32 Q49 30 52 33" stroke="#7A5623" stroke-width="2" stroke-linecap="round"/>
+    <path d="M62 48 Q66 47 69 50" stroke="#7A5623" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="36" cy="52" r="1.5" fill="#7A5623"/>
+  </g>
+  
+  <!-- Potato 3 (front center) -->
+  <g transform="translate(50, 60)">
+    <path d="M25 45 C10 25 30 5 60 8 C90 12 105 32 95 60 C85 82 45 78 25 45 Z" fill="#DEB879" stroke="#B38944" stroke-width="2.5"/>
+    <!-- Highlights and spots -->
+    <ellipse cx="55" cy="30" rx="20" ry="10" fill="#E8C78E" opacity="0.6"/>
+    <path d="M42 35 Q46 33 50 36" stroke="#7A5623" stroke-width="2" stroke-linecap="round"/>
+    <path d="M72 40 Q76 39 80 42" stroke="#7A5623" stroke-width="2" stroke-linecap="round"/>
+    <path d="M52 55 Q56 54 60 57" stroke="#7A5623" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="35" cy="48" r="1.5" fill="#7A5623"/>
+    <circle cx="85" cy="52" r="1.5" fill="#7A5623"/>
+  </g>
+
+  <!-- Green sprout leaf -->
+  <g transform="translate(130, 50)">
+    <path d="M10 25 C15 10 32 8 36 2 C38 15 26 28 10 25 Z" fill="#4CAF50"/>
+    <path d="M12 24 C16 16 26 12 34 5" stroke="#81C784" stroke-width="1.2"/>
+  </g>
+</svg>

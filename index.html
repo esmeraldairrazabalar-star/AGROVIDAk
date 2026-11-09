@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgroVida - Cultiva mejor, cosecha con confianza</title>
+  
+  <!-- Favicon e Iconos -->
+  <link rel="icon" type="image/svg+xml" href="img/logo.svg">
+  
+  <!-- Hojas de Estilos -->
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- Librerías de la base de datos y autenticación -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <!-- ====================================================================
+       PORTAL DE ACCESO Y AUTENTICACIÓN (Pantalla antes de entrar y al cerrar sesión)
+       ==================================================================== -->
+  <div class="auth-portal-screen" id="auth-portal-screen">
+    <div class="auth-portal-layout">
+
+      <!-- Lado izquierdo: bienvenida -->
+      <div class="auth-hero">
+        <div class="auth-hero-badge">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#4ade80"><path d="M4 18C4 9 11 4 20 4c0 9-5 15-14 15-1 0-2-.5-2-1zm4-1c4-3 7-6 9-11-5 1-8 4-9 11z"/></svg>
+          AgroVida Oficial - Campo Peruano
+        </div>
+        <h1 class="auth-hero-title">¡Bienvenidos a<br><span>AgroVida!</span></h1>
+        <div class="auth-hero-line"></div>
+        <p class="auth-hero-sub">Plataforma agrícola para cuidar tus parcelas y maximizar tus cosechas.</p>
+
+        <div class="auth-feature-list">
+          <div class="auth-feature">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-9"/><path d="M12 13C12 9 9 6 5 6c0 4 3 7 7 7z"/><path d="M12 13c0-4 3-7 7-7 0 4-3 7-7 7z"/><path d="M8 22h8"/></svg>
+            <div><strong>Mis Cultivos</strong><span>Seguimiento de siembras y estado fitosanitario</span></div>
+          </div>
+          <div class="auth-feature">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="#4ade80"><path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3H9zm3 15a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+            <div><strong>Cámara en Vivo</strong><span>Diagnóstico inmediato de plagas y hongos</span></div>
+          </div>
+          <div class="auth-feature">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>
+            <div><strong>Biblioteca Agrícola</strong><span>Manuales para Papa, Choclo, Haba, Arvejas y Quinua</span></div>
+          </div>
+        </div>
+
+        <p class="auth-hero-quote">Porque tu esfuerzo en la tierra<br>también merece el mejor cuidado.</p>
+      </div>
+
+      <!-- Lado derecho: formularios -->
+      <div class="auth-card">
+        <div class="auth-card-logo">
+          <img src="img/logo.svg" alt="AgroVida">
+        </div>
+
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab-btn active" data-tab="login">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg>
+            Iniciar sesión
+          </button>
+          <button type="button" class="auth-tab-btn" data-tab="register">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="10" cy="8" r="4"/><path d="M2 21c0-4.4 3.6-7 8-7 1.5 0 2.8.3 4 .9V21z"/><path d="M19 12v3h3v2h-3v3h-2v-3h-3v-2h3v-3z"/></svg>
+            Crear cuenta
+          </button>
+        </div>
+
+        <div class="auth-message hidden" id="auth-message" role="alert"></div>
+
+        <!-- Iniciar sesión -->
+        <div class="auth-panel active" id="auth-panel-login">
+          <form id="portal-form-login" autocomplete="off">
+            <div class="auth-field">
+              <svg class="auth-field-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+              <input type="email" id="portal-login-email" placeholder="Correo electrónico" autocomplete="off" value="" required>
+            </div>
+            <div class="auth-field">
+              <svg class="auth-field-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17 9V7a5 5 0 0 0-10 0v2H5v12h14V9zm-8-2a3 3 0 0 1 6 0v2H9z"/></svg>
+              <input type="password" id="portal-login-password" placeholder="Contraseña" autocomplete="new-password" value="" required>
+              <button type="button" class="toggle-password" data-target="portal-login-password" aria-label="Mostrar contraseña">
+                <svg class="eye-off" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l18 18"/><path d="M10.6 6.1A10 10 0 0 1 12 6c6 0 10 6 10 6a17 17 0 0 1-3.2 3.7M6.6 6.7A17 17 0 0 0 2 12s4 6 10 6a9.7 9.7 0 0 0 4-.9"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+                <svg class="eye-on" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+
+            <div class="auth-row">
+              <label class="auth-check"><input type="checkbox" id="portal-remember"> Recordar mi cuenta</label>
+              <a href="#" id="link-forgot-password" class="auth-link">¿Olvidaste tu contraseña?</a>
+            </div>
+
+            <button type="submit" class="auth-btn-primary">Ingresar a mi campo <span aria-hidden="true">→</span></button>
+          </form>
+
+          <div class="auth-divider"><span>O continúa con</span></div>
+
+          <button type="button" class="auth-btn-google" id="btn-google-login">
+            <svg width="24" height="24" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.4-4.8 7.1l7.6 5.9c4.4-4.1 7-10.1 7-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.500 14.500 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.900 2.300-8.300 2.300-6.300 0-11.600-4.100-13.500-9.800l-7.900 6.100C6.500 42.600 14.600 48 24 48z"/></svg>
+            Continuar con Google
+          </button>
+
+          <button type="button" class="auth-btn-admin" id="btn-show-admin">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 4 5v6c0 5 3.400 9.700 8 11 4.600-1.300 8-6 8-11V5zm-1.200 14.200L7.400 12.800l1.400-1.400 2 2 4.400-4.400 1.400 1.400z"/></svg>
+            Acceso de administrador
+          </button>
+
+          <p class="auth-foot">¿No tienes cuenta? <a href="#" class="auth-link-strong" data-auth-go="register">Regístrate aquí</a></p>
+        </div>
+
+        <!-- Crear cuenta -->
+        <div class="auth-panel" id="auth-panel-register">
+          <form id="portal-form-register">
+            <div class="auth-field">
+              <svg class="auth-field-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.400 3.600-7 8-7s8 2.600 8 7z"/></svg>
+              <input type="text" id="portal-reg-name" placeholder="Nombre y apellidos" autocomplete="name" required>
+            </div>
+            <div class="auth-field">
+              <svg class="auth-field-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+              <input type="email" id="portal-reg-email" placeholder="Correo electrónico" autocomplete="email" required>
+            </div>
+            <div class="auth-grid-2">
+              <div class="auth-field">
+                <svg class="auth-field-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.600 10.800a15 15 0 0 0 6.600 6.600l2.200-2.200a1 1 0 0 1 1-.25 11.400 11.400 0 0 0 3.600.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.500a1 1 0 0 1 1 1c0 1.300.2 2.500.57 3.600a1 1 0 0 1-.25 1z"/></svg>
+                <input type="tel" id="portal-reg-phone" placeholder="Teléfono" autocomplete="tel">
+              </div>
+              <div class="auth-field">
+                <svg class="auth-field-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5.200 7 13 7 13s7-7.800 7-13a7 7 0 0 0-7-7zm0 9.500A2.500 2.500 0 1 1 12 6.500a2.500 2.500 0 0 1 0 5z"/></svg>
+                <input type="text" id="portal-reg-location" placeholder="Ubicación" autocomplete="address-level1">
+              </div>
+            </div>
+            <div class="auth-grid-2">
+              <div class="auth-field">
+                <svg class="auth-field-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17 9V7a5 5 0 0 0-10 0v2H5v12h14V9zm-8-2a3 3 0 0 1 6 0v2H9z"/></svg>
+                <input type="password" id="portal-reg-pass" placeholder="Contraseña" minlength="6" autocomplete="new-password" required>
+              </div>
+              <div class="auth-field">
+                <svg class="auth-field-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17 9V7a5 5 0 0 0-10 0v2H5v12h14V9zm-8-2a3 3 0 0 1 6 0v2H9z"/></svg>
+                <input type="password" id="portal-reg-pass-confirm" placeholder="Confirmar" minlength="6" autocomplete="new-password" required>
+              </div>
+            </div>
+            <button type="submit" class="auth-btn-primary">Crear mi cuenta <span aria-hidden="true">→</span></button>
+          </form>
+
+          <div class="auth-divider"><span>O continúa con</span></div>
+          <button type="button" class="auth-btn-google" id="btn-google-register" onclick="document.getElementById('btn-google-login').click()">
+            <svg width="24" height="24" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.4-4.8 7.1l7.6 5.9c4.4-4.1 7-10.1 7-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.500 14.500 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.900 2.300-8.300 2.300-6.300 0-11.600-4.100-13.500-9.800l-7.900 6.100C6.500 42.600 14.600 48 24 48z"/></svg>
+            Continuar con Google
+          </button>
+          <p class="auth-foot">¿Ya tienes cuenta? <a href="#" class="auth-link-strong" data-auth-go="login">Inicia sesión</a></p>
+        </div>
+
+        <!-- Administrador -->
+        <div class="auth-panel" id="auth-panel-admin">
+          <div class="auth-admin-note">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 4 5v6c0 5 3.400 9.700 8 11 4.600-1.300 8-6 8-11V5zm-1.200 14.200L7.400 12.800l1.400-1.400 2 2 4.400-4.400 1.400 1.400z"/></svg>
+            <span>Acceso exclusivo para administradores de AgroVida.</span>
+          </div>
+          <form id="portal-form-admin">
+            <div class="auth-field">
+              <svg class="auth-field-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+              <input type="email" id="portal-admin-email" placeholder="Correo de administrador" autocomplete="username" required>
+            </div>
+            <div class="auth-field">
+              <svg class="auth-field-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17 9V7a5 5 0 0 0-10 0v2H5v12h14V9zm-8-2a3 3 0 0 1 6 0v2H9z"/></svg>
+              <input type="password" id="portal-admin-password" placeholder="Contraseña" autocomplete="current-password" required>
+              <button type="button" class="toggle-password" data-target="portal-admin-password" aria-label="Mostrar contraseña">
+                <svg class="eye-off" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l18 18"/><path d="M10.6 6.1A10 10 0 0 1 12 6c6 0 10 6 10 6a17 17 0 0 1-3.2 3.7M6.6 6.7A17 17 0 0 0 2 12s4 6 10 6a9.7 9.7 0 0 0 4-.9"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+                <svg class="eye-on" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <button type="submit" class="auth-btn-primary">Ingresar al panel <span aria-hidden="true">→</span></button>
+          </form>
+          <p class="auth-foot"><a href="#" class="auth-link-strong" data-auth-go="login">← Volver a iniciar sesión</a></p>
+        </div>
+
+        <div class="auth-wave"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       APLICACIÓN PRINCIPAL (Visible tras iniciar sesión)
+       ==================================================================== -->
+  <div class="app-container" id="app-main-layout" style="display: none;">
+
+    <!-- MENÚ LATERAL (SIDEBAR) -->
+    <aside class="sidebar" id="main-sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="brand-link" data-screen="inicio">
+          <img src="img/logo.svg" alt="AgroVida" class="brand-logo-img">
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <!-- ====== MENÚ DE AGRICULTOR / USUARIO ====== -->
+        <div id="sidebar-farmer-section" style="display: flex; flex-direction: column; gap: 4px; width: 100%;">
+          <!-- 1: Inicio -->
+          <button class="sidebar-nav-item active nav-item-farmer" data-screen="inicio">
+            <span class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </span>
+            <span>Inicio</span>
+          </button>
+
+          <!-- 2: Mis Cultivos -->
+          <button class="sidebar-nav-item nav-item-farmer" data-screen="cultivos">
+            <span class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z"></path>
+                <path d="M12 6v6l4 2"></path>
+                <path d="M7 16c2-4 5-6 9-6"></path>
+              </svg>
+            </span>
+            <span>Mis cultivos</span>
+          </button>
+
+          <!-- 3: Analizar Planta (Cámara e IA) -->
+          <button class="sidebar-nav-item nav-item-farmer" data-screen="analizar">
+            <span class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+            </span>
+            <span>Analizar planta</span>
+          </button>
+
+          <!-- 4: Enfermedades -->
+          <button class="sidebar-nav-item nav-item-farmer" data-screen="enfermedades">
+            <span class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <line x1="12" y1="8" x2="12" y2="14"></line>
+                <line x1="9" y1="11" x2="15" y2="11"></line>
+              </svg>
+            </span>
+            <span>Enfermedades</span>
+          </button>
+
+          <!-- 5: Historial -->
+          <button class="sidebar-nav-item nav-item-farmer" data-screen="historial">
+            <span class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </span>
+            <span>Historial</span>
+          </button>
+
+          <!-- 6: Biblioteca Agrícola -->
+          <button class="sidebar-nav-item nav-item-farmer" data-screen="biblioteca">
+            <span class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+            </span>
+            <span>Biblioteca agrícola</span>
+          </button>
+
+          <!-- 7: Mi Perfil -->
+          <button class="sidebar-nav-item nav-item-farmer" data-screen="perfil">
+            <span class="nav-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </span>
+            <span>Mi perfil</span>
+          </button>
+        </div>
+
+        <!-- ====== MENÚ EXCLUSIVO DE ADMINISTRADOR ====== -->
+        <div id="sidebar-admin-section" style="display: none; flex-direction: column; gap: 4px; width: 100%;">
+          <div style="padding: 6px 14px 4px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; color: #86efac; font-weight: 700;">
+            Gestión AgroVida
+          </div>
+          <button class="sidebar-nav-item active" data-screen="admin" data-admin-tab="metricas">
+            <span class="nav-icon">📊</span>
+            <span>Panel y Métricas</span>
+          </button>
+          <button class="sidebar-nav-item" data-screen="admin" data-admin-tab="usuarios">
+            <span class="nav-icon">👥</span>
+            <span>Gestión de Usuarios</span>
+          </button>
+          <button class="sidebar-nav-item" data-screen="admin" data-admin-tab="enfermedades">
+            <span class="nav-icon">🛡️</span>
+            <span>Catálogo Enfermedades</span>
+          </button>
+          <button class="sidebar-nav-item" data-screen="admin" data-admin-tab="cultivos">
+            <span class="nav-icon">🌱</span>
+            <span>Supervisar Cultivos</span>
+          </button>
+          <button class="sidebar-nav-item" data-screen="admin" data-admin-tab="historial">
+            <span class="nav-icon">📋</span>
+            <span>Fotos y Auditoría</span>
+          </button>
+          <button class="sidebar-nav-item" data-screen="analizar">
+            <span class="nav-icon">🔬</span>
+            <span>Diagnóstico IA con Cámara</span>
+          </button>
+        </div>
+
+        <!-- Cerrar Sesión -->
+        <button class="sidebar-nav-item item-logout btn-logout-action">
+          <span class="nav-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </span>
+          <span>Cerrar sesión</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <img src="img/sidebar-footer.svg" alt="Tecnología al servicio del campo" class="sidebar-footer-card">
+      </div>
+    </aside>
+
+    <!-- CONTENEDOR DERECHO -->
+    <div class="main-wrapper">
+      
+      <!-- BARRA SUPERIOR (TOPBAR) -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="btn-mobile-burger" aria-label="Abrir menú">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+
+          <div class="search-box">
+            <span class="search-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <input type="text" id="global-search-input" placeholder="Buscar cultivos, enfermedades, guías...">
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Indicador Administrador -->
+          <span id="topbar-admin-badge" style="display: none;"></span>
+
+          <!-- Notificaciones -->
+          <div class="notifications-wrapper">
+            <button class="topbar-icon-btn" id="btn-top-notifications" title="Notificaciones agrícolas">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span class="notification-badge" id="notifications-count-badge">2</span>
+            </button>
+
+            <div class="notifications-dropdown" id="notifications-dropdown">
+              <div class="notifications-dropdown-header">
+                <strong>Notificaciones agrícolas</strong>
+                <span class="badge-healthy status-badge">Al día</span>
+              </div>
+              <div class="notifications-list" id="notifications-list">
+                <!-- Se llena dinámicamente -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Chip de Perfil -->
+          <div class="user-profile-chip" data-screen="perfil" title="Ver mi perfil">
+            <img src="img/farmer-avatar.jpg" alt="Avatar" class="topbar-avatar user-avatar-display">
+            <span class="user-name-display">Juan Pérez</span>
+            <span class="chip-arrow">▾</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENIDO DE PANTALLAS -->
+      <main class="app-main-content">
+
+        <!-- ================================================================
+             PANTALLA 1: INICIO (DASHBOARD)
+             ================================================================ -->
+        <section id="screen-inicio" class="screen-content active">
+          <div class="section-header-row">
+            <div class="section-pill-title">
+              <span class="pill-icon">🌿</span>
+              <span>Inicio</span>
+            </div>
+          </div>
+
+          <div class="inicio-grid-layout">
+            <div class="inicio-left-col">
+              
+              <!-- Banner Hero con Fotografía Real -->
+              <div class="hero-banner-card">
+                <div class="hero-banner-content">
+                  <h1>¡Bienvenido a AgroVida!</h1>
+                  <p class="hero-subtitle">Cultiva mejor, cosecha con confianza.</p>
+                  <p class="hero-desc">Cuida tus plantas, previene enfermedades y monitorea el crecimiento de tus parcelas.</p>
+                  <button class="btn btn-hero" data-screen="analizar">
+                    📷 Analizar una planta →
+                  </button>
+                </div>
+                <img src="img/hero-campo.jpg" alt="Campo agrícola AgroVida" class="hero-banner-bg-img">
+              </div>
+
+              <!-- Accesos Rápidos -->
+              <div class="quick-access-section">
+                <h3><span>▦</span> Accesos rápidos</h3>
+                <div class="quick-access-grid">
+                  <div class="quick-card" data-screen="cultivos">
+                    <div class="quick-card-icon qc-green">🌱</div>
+                    <span>Mis cultivos</span>
+                    <div class="quick-card-arrow">→</div>
+                  </div>
+                  <div class="quick-card" data-screen="analizar">
+                    <div class="quick-card-icon qc-teal">📷</div>
+                    <span>Analizar planta</span>
+                    <div class="quick-card-arrow">→</div>
+                  </div>
+                  <div class="quick-card" data-screen="enfermedades">
+                    <div class="quick-card-icon qc-blue">🛡️</div>
+                    <span>Enfermedades</span>
+                    <div class="quick-card-arrow">→</div>
+                  </div>
+                  <div class="quick-card" data-screen="historial">
+                    <div class="quick-card-icon qc-purple">🕒</div>
+                    <span>Historial</span>
+                    <div class="quick-card-arrow">→</div>
+                  </div>
+                  <div class="quick-card" data-screen="biblioteca">
+                    <div class="quick-card-icon qc-green">📖</div>
+                    <span>Biblioteca</span>
+                    <div class="quick-card-arrow">→</div>
+                  </div>
+                  <div class="quick-card" data-screen="perfil">
+                    <div class="quick-card-icon qc-amber">👤</div>
+                    <span>Mi perfil</span>
+                    <div class="quick-card-arrow">→</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cultivos Recientes -->
+              <div class="crops-preview-section">
+                <div class="crops-preview-header">
+                  <h3><span>🌱</span> Mis cultivos recientes</h3>
+                  <button class="btn-link-action" data-screen="cultivos">Ver todos →</button>
+                </div>
+                <div class="crops-preview-grid" id="inicio-cultivos-recientes">
+                  <!-- Se llena dinámicamente -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna Derecha -->
+            <div class="inicio-right-col">
+              <!-- Consejo del Día -->
+              <div class="advice-card">
+                <div class="advice-header">
+                  <span>💡 Consejo del día</span>
+                </div>
+                <div class="advice-body">
+                  <p>Inspecciona las hojas basales de tus cultivos en las mañanas. La presencia de rocío y calor favorece la aparición temprana de hongos como el tizón o cercospora.</p>
+                  <button class="btn btn-outline btn-sm btn-block" data-screen="biblioteca">
+                    Ver guías de prevención →
+                  </button>
+                </div>
+              </div>
+
+              <!-- Donut de Estado de Salud -->
+              <div class="health-donut-card">
+                <div class="section-pill-title" style="padding: 4px 10px; font-size: 0.95rem;">
+                  <span class="pill-icon">✓</span>
+                  <span>Estado de tus cultivos</span>
+                </div>
+                <div class="health-donut-content">
+                  <div class="donut-svg-wrapper">
+                    <svg width="90" height="90" viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="40" stroke="#e2e8f0" stroke-width="12" fill="none"/>
+                      <circle id="health-donut-circle" cx="50" cy="50" r="40" stroke="#2e7d32" stroke-width="12" fill="none"
+                              stroke-dasharray="251.32" stroke-dashoffset="37.7" stroke-linecap="round"
+                              transform="rotate(-90 50 50)"/>
+                    </svg>
+                    <span class="donut-percentage-label" id="health-donut-percentage">85%</span>
+                  </div>
+                  <div>
+                    <strong style="color: var(--primary-dark); font-size: 0.95rem;">Cultivos en buen estado</strong>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
+                      Continúa con las revisiones regulares de follaje.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PANTALLA 2: MIS CULTIVOS
+             ================================================================ -->
+        <section id="screen-cultivos" class="screen-content">
+          <div class="section-header-row">
+            <div class="section-pill-title">
+              <span class="pill-icon">🌱</span>
+              <span>Mis cultivos</span>
+            </div>
+            <button class="btn btn-primary" onclick="CultivosModule.resetForm(); App.showScreen('agregar-cultivo')">
+              + Agregar cultivo
+            </button>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Cultivo</th>
+                  <th>Fecha de siembra</th>
+                  <th>Área</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-cultivos-body">
+                <!-- Generado dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PANTALLA 3: AGREGAR CULTIVO
+             ================================================================ -->
+        <section id="screen-agregar-cultivo" class="screen-content">
+          <div class="section-header-row">
+            <button class="btn btn-secondary btn-sm" onclick="App.showScreen('cultivos')">
+              ← Volver
+            </button>
+            <div class="section-pill-title">
+              <span class="pill-icon">🌱</span>
+              <span id="form-cultivo-title">Agregar cultivo</span>
+            </div>
+            <div style="width: 80px;"></div>
+          </div>
+
+          <div class="card form-cultivo-wrapper">
+            <form id="form-agregar-cultivo">
+              <div class="form-crop-grid">
+                
+                <!-- Selector / Cámara de Fotografía -->
+                <div class="crop-photo-picker">
+                  <div class="crop-preview-box">
+                    <img src="img/cultivos/papa.jpg" alt="Previsualización" id="cultivo-foto-preview">
+                  </div>
+                  <input type="file" id="cultivo-foto-input" accept="image/*" class="hidden">
+                  <div style="display: flex; gap: 8px; width: 100%;">
+                    <button type="button" class="btn btn-outline btn-sm" style="flex: 1;" onclick="document.getElementById('cultivo-foto-input').click()">
+                      📁 Subir foto
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm" style="flex: 1;" onclick="AnalisisModule.openCameraView()">
+                      📸 Cámara
+                    </button>
+                  </div>
+                  <small style="font-size: 0.72rem; color: var(--text-muted); text-align: center;">Formatos: JPG, PNG reales (máx. 8MB)</small>
+                </div>
+
+                <div class="crop-fields-col">
+                  <div class="form-group">
+                    <label class="form-label" for="cultivo-nombre">Nombre del cultivo:</label>
+                    <select id="cultivo-nombre" class="form-select" required>
+                      <option value="Papa">Papa (Solanum tuberosum)</option>
+                      <option value="Choclo">Choclo gigante</option>
+                      <option value="Haba">Haba andina (Vicia faba)</option>
+                      <option value="Arvejas">Arvejas en vaina</option>
+                      <option value="Quinua">Quinua andina</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="cultivo-fecha">Fecha de siembra:</label>
+                    <input type="date" id="cultivo-fecha" class="form-input" required value="2025-08-15">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="cultivo-area">Área cultivada (m²):</label>
+                    <input type="number" id="cultivo-area" class="form-input" placeholder="Ej: 100" min="1" step="any" required value="100">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="cultivo-suelo">Tipo de suelo:</label>
+                    <select id="cultivo-suelo" class="form-select">
+                      <option value="Franco-arenoso">Franco-arenoso</option>
+                      <option value="Franco">Franco equilibrado</option>
+                      <option value="Franco-arcilloso">Franco-arcilloso</option>
+                      <option value="Arcilloso">Arcilloso</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="cultivo-estado">Estado inicial:</label>
+                    <select id="cultivo-estado" class="form-select">
+                      <option value="Saludable">Saludable</option>
+                      <option value="En revisión">En revisión</option>
+                      <option value="En tratamiento">En tratamiento</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="cultivo-observaciones">Observaciones agronómicas:</label>
+                    <textarea id="cultivo-observaciones" class="form-textarea" placeholder="Abonamiento, aporque, riego o cuidados..."></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-actions-row">
+                <button type="button" class="btn btn-secondary" id="btn-cancelar-cultivo">
+                  Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  💾 Guardar cultivo
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PANTALLA 4: ANALIZAR PLANTA (Cámara e Inteligencia Artificial)
+             ================================================================ -->
+        <section id="screen-analizar" class="screen-content">
+          <div class="section-header-row">
+            <div class="section-pill-title">
+              <span class="pill-icon">🔍</span>
+              <span>Identificación de problemas en las plantas</span>
+            </div>
+          </div>
+
+          <div class="analizar-layout">
+            <!-- Zona de Carga / Captura con Cámara -->
+            <div class="analizar-upload-box" id="analisis-upload-prompt">
+              <div class="upload-icon">📸</div>
+              <h3 style="margin-bottom: 6px;">Toma o sube una fotografía real</h3>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;">
+                Captura la hoja, tallo o fruto afectado para identificar la enfermedad
+              </p>
+              
+              <!-- Botones de Acción: Cámara y Archivo -->
+              <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+                <button class="btn btn-primary" id="btn-activar-camara">
+                  📸 Tomar foto con la cámara
+                </button>
+                
+                <input type="file" id="analizar-file-input" accept="image/*" class="hidden">
+                <input type="file" id="analizar-camera-direct-input" accept="image/*" capture="environment" class="hidden">
+                
+                <button class="btn btn-secondary" onclick="document.getElementById('analizar-file-input').click()">
+                  📁 Subir desde archivo
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Vista Previa de Inspección -->
+            <div class="analizar-preview-card hidden" id="analisis-preview-container">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h4 style="font-weight: 700;">Fotografía a inspeccionar:</h4>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <select id="analisis-crop-select" class="form-select" style="padding: 4px 8px; font-size: 0.82rem;">
+                    <option value="Papa">Cultivo: Papa</option>
+                    <option value="Choclo">Cultivo: Choclo</option>
+                    <option value="Haba">Cultivo: Haba</option>
+                    <option value="Arvejas">Cultivo: Arvejas</option>
+                    <option value="Quinua">Cultivo: Quinua</option>
+                  </select>
+                </div>
+              </div>
+
+              <img src="" alt="Hoja a analizar" class="plant-preview-image" id="analisis-img-preview">
+              
+              <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <button class="btn btn-primary" id="btn-ejecutar-analisis" style="flex: 2;">
+                  🔬 Analizar planta con IA
+                </button>
+                <button class="btn btn-danger" id="btn-descartar-foto" style="flex: 1;" type="button">
+                  🗑️ Eliminar foto
+                </button>
+              </div>
+
+              <div id="analisis-loader" class="hidden" style="text-align: center; padding: 10px;">
+                <div style="display: inline-block; animation: spin 1s linear infinite; font-size: 1.5rem;">⚙️</div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px;">Comparando tu foto con las enfermedades del catálogo...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resultados del Diagnóstico -->
+          <div class="analysis-results-card hidden" id="analisis-results-container">
+            <div class="result-header-box">
+              <div>
+                <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Resultado del análisis:</span>
+                <h2 id="resultado-enfermedad-titulo" style="color: var(--primary-dark); font-size: 1.4rem; margin-top: 4px;"></h2>
+              </div>
+              <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                <span class="status-badge badge-warning" id="resultado-severidad-badge"></span>
+                <small id="resultado-modelo-badge" style="font-size: 0.75rem; color: var(--text-muted);"></small>
+              </div>
+            </div>
+
+            <!-- Sin coincidencia / No es planta -->
+            <div id="analisis-nomatch" class="hidden">
+              <div class="nomatch-box">
+                <img id="resultado-nomatch-foto" src="" alt="Tu foto">
+                <div>
+                  <h4 id="resultado-nomatch-titulo">Esta foto no coincide con ninguna enfermedad registrada</h4>
+                  <p id="resultado-nomatch-desc">Puede que la planta esté sana o que esa enfermedad aún no esté en el catálogo. Prueba con una foto más cercana y con buena luz de la hoja, tallo o fruto afectado, o revisa el catálogo de enfermedades.</p>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; flex-wrap: wrap;">
+                <button class="btn btn-primary" id="btn-guardar-nomatch-historial">
+                  📋 Guardar fotografía en historial
+                </button>
+                <button class="btn btn-outline" onclick="App.showScreen('enfermedades')">
+                  Consultar catálogo de enfermedades
+                </button>
+              </div>
+            </div>
+
+            <!-- Con coincidencia -->
+            <div id="analisis-match-detail">
+              <div class="compare-photos">
+                <figure><img id="resultado-comp-usuario" src="" alt="Tu foto"><figcaption>Tu foto</figcaption></figure>
+                <figure><img id="resultado-comp-referencia" src="" alt="Foto del catálogo"><figcaption>Foto del catálogo que más se parece</figcaption></figure>
+              </div>
+              <p id="resultado-otras" class="hidden" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;"></p>
+
+              <div class="result-section-grid">
+                <div class="result-detail-box">
+                  <h4><span>🔍</span> Síntomas identificados:</h4>
+                  <ul id="resultado-sintomas-list"></ul>
+                </div>
+
+                <div class="result-detail-box">
+                  <h4><span>⚠️</span> Posibles causas del problema:</h4>
+                  <ul id="resultado-causas-list"></ul>
+                </div>
+
+                <div class="result-detail-box">
+                  <h4><span>🛡️</span> Medidas de prevención:</h4>
+                  <ul id="resultado-prevencion-list"></ul>
+                </div>
+
+                <div class="result-detail-box">
+                  <h4><span>💊</span> Qué hacer si ya apareció (Tratamiento):</h4>
+                  <ul id="resultado-tratamiento-list"></ul>
+                </div>
+              </div>
+
+              <div class="alert-box-avoid" style="margin-bottom: 20px;">
+                <strong>🚫 Prácticas y errores que debes evitar:</strong>
+                <ul id="resultado-evitar-list" style="margin-top: 6px; padding-left: 20px;"></ul>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end; gap: 12px; flex-wrap: wrap;">
+                <button class="btn btn-danger btn-sm" id="btn-eliminar-foto-analisis" type="button">
+                  🗑️ Eliminar foto tomada
+                </button>
+                <button class="btn btn-outline" onclick="App.showScreen('enfermedades')">
+                  Consultar catálogo de enfermedades
+                </button>
+                <button class="btn btn-primary" id="btn-guardar-analisis-historial">
+                  📋 Guardar en mi historial
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PANTALLA 5: ENFERMEDADES (Catálogo Oficial)
+             ================================================================ -->
+        <section id="screen-enfermedades" class="screen-content">
+          <div class="section-header-row">
+            <div class="section-pill-title">
+              <span class="pill-icon">🛡️</span>
+              <span>Información sobre enfermedades y plagas</span>
+            </div>
+          </div>
+
+          <div class="disease-search-bar">
+            <span>🔍</span>
+            <input type="text" id="input-buscar-enfermedad" placeholder="Buscar enfermedad por nombre, síntomas o cultivo (ej: tizón, roya, gusano)..." style="border: none; outline: none; width: 100%; font-size: 0.95rem;">
+          </div>
+
+          <div class="filter-chips-row">
+            <button class="chip-filtro-cultivo active" data-crop="todos">Todos los cultivos</button>
+            <button class="chip-filtro-cultivo" data-crop="Papa">Papa</button>
+            <button class="chip-filtro-cultivo" data-crop="Choclo">Choclo</button>
+            <button class="chip-filtro-cultivo" data-crop="Haba">Haba</button>
+            <button class="chip-filtro-cultivo" data-crop="Arvejas">Arvejas</button>
+            <button class="chip-filtro-cultivo" data-crop="Quinua">Quinua</button>
+          </div>
+
+          <div class="diseases-grid" id="enfermedades-cards-grid">
+            <!-- Llenado por enfermedades.js -->
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PANTALLA 6: HISTORIAL FITOSANITARIO
+             ================================================================ -->
+        <section id="screen-historial" class="screen-content">
+          <div class="section-header-row">
+            <div class="section-pill-title">
+              <span class="pill-icon">🕒</span>
+              <span>Historial de fotografías y problemas detectados</span>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <label for="filtro-historial-estado" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Estado:</label>
+              <select id="filtro-historial-estado" class="form-select" style="padding: 6px 12px; font-size: 0.85rem; width: auto;">
+                <option value="todos">Todos los registros</option>
+                <option value="En tratamiento">En tratamiento</option>
+                <option value="Sin problemas">Sin problemas</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="historial-cards-list" id="historial-items-container">
+            <!-- Llenado por historial.js -->
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PANTALLA 7: BIBLIOTECA AGRÍCOLA
+             ================================================================ -->
+        <section id="screen-biblioteca" class="screen-content">
+          <div class="section-header-row">
+            <div class="section-pill-title">
+              <span class="pill-icon">📖</span>
+              <span>Biblioteca agrícola</span>
+            </div>
+          </div>
+
+          <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 22px;">
+            Guías técnicas completas con recomendaciones sobre preparación del terreno, siembra, riego, nutrición, prevención y cosecha.
+          </p>
+
+          <div class="biblioteca-grid" id="biblioteca-grid-container">
+            <!-- Llenado por biblioteca.js con fotos reales -->
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PANTALLA 8: MI PERFIL
+             ================================================================ -->
+        <section id="screen-perfil" class="screen-content">
+          <div class="section-header-row">
+            <div class="section-pill-title">
+              <span class="pill-icon">👤</span>
+              <span>Mi perfil</span>
+            </div>
+          </div>
+
+          <div class="perfil-wrapper">
+            <div class="perfil-card-main">
+              <div class="perfil-avatar-wrapper">
+                <img src="img/farmer-avatar.jpg" alt="Avatar del agricultor" class="perfil-avatar-img user-avatar-display" id="perfil-usuario-avatar">
+              </div>
+
+              <input type="file" id="input-perfil-foto-hidden" accept="image/*" class="hidden">
+              <button class="btn btn-outline btn-sm" id="btn-perfil-cambiar-foto">
+                📷 Cambiar foto
+              </button>
+
+              <div class="perfil-info-block">
+                <h2 id="perfil-usuario-nombre" class="user-name-display">Juan Pérez</h2>
+                <p class="perfil-email-sub user-email-display" id="perfil-usuario-email">juan@gmail.com</p>
+                <p style="font-size: 0.88rem; color: var(--text-muted);">
+                  📍 <span id="perfil-usuario-ubicacion">Valle del Mantaro, Junín</span> | 📞 <span id="perfil-usuario-telefono">+51 987 654 321</span>
+                </p>
+                <small style="font-size: 0.78rem; color: var(--text-light); display: block; margin-top: 4px;">
+                  Miembro desde: <span id="perfil-usuario-registro">15/05/2024</span>
+                </small>
+              </div>
+
+              <div class="perfil-stats-row">
+                <div class="perfil-stat-item">
+                  <strong id="perfil-cultivos-count">4</strong>
+                  <span>Cultivos registrados</span>
+                </div>
+                <div class="perfil-stat-item">
+                  <strong style="color: #0369a1;">Activo</strong>
+                  <span>Estado de cuenta</span>
+                </div>
+              </div>
+
+              <div class="perfil-actions-row">
+                <button class="btn btn-outline" id="btn-abrir-editar-perfil">
+                  ✏️ Editar perfil
+                </button>
+                <button class="btn btn-secondary" id="btn-perfil-reportes">
+                  📊 Descargar reporte
+                </button>
+                <button class="btn btn-secondary" id="btn-perfil-config">
+                  ⚙️ Configurar IA
+                </button>
+                <button class="btn btn-danger btn-logout-action">
+                  🚪 Cerrar sesión
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================
+             PANTALLA 9: PANEL DE ADMINISTRADOR (Control del Sistema)
+             ================================================================ -->
+        <section id="screen-admin" class="screen-content">
+          <div class="section-header-row" style="margin-bottom: 16px;">
+            <div>
+              <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-dark); margin: 0 0 4px;">Centro de Gestión y Reportes</h2>
+              <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">Monitoreo fitosanitario, métricas del valle, agricultores y auditoría del sistema</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-primary" id="btn-admin-nueva-enfermedad" style="display: none;">
+                + Agregar nueva enfermedad
+              </button>
+            </div>
+          </div>
+
+          <!-- Métricas Generales del Sistema -->
+          <div class="admin-metrics-row">
+            <div class="admin-metric-card">
+              <div class="admin-metric-icon ami-blue">👥</div>
+              <div>
+                <strong id="admin-metric-users">0</strong>
+                <span>Agricultores registrados</span>
+              </div>
+            </div>
+
+            <div class="admin-metric-card">
+              <div class="admin-metric-icon ami-green">🌱</div>
+              <div>
+                <strong id="admin-metric-cultivos">0</strong>
+                <span>Cultivos registrados</span>
+              </div>
+            </div>
+
+            <div class="admin-metric-card">
+              <div class="admin-metric-icon ami-purple">🔬</div>
+              <div>
+                <strong id="admin-metric-analisis">0</strong>
+                <span>Análisis guardados</span>
+              </div>
+            </div>
+
+            <div class="admin-metric-card">
+              <div class="admin-metric-icon ami-amber">📖</div>
+              <div>
+                <strong id="admin-metric-enfermedades">0</strong>
+                <span>Fichas de enfermedades</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vista 0: Panel de Reportes y Métricas Ejecutivas -->
+          <div class="admin-tab-view active" id="admin-view-metricas">
+            <!-- Barra de Acciones y Descarga de Reportes -->
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px; background: #fff; padding: 14px 18px; border-radius: 10px; border: 1px solid var(--border-color);">
+              <div>
+                <h3 style="margin: 0 0 4px; font-size: 1.02rem; font-weight: 700; color: var(--text-dark);">Informes Ejecutivos y Alertas Fitosanitarias</h3>
+                <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted);">Descarga informes oficiales para cooperativas, imprime reportes y emite avisos sanitarios al campo.</p>
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="btn btn-primary btn-sm" id="btn-admin-export-pdf" type="button" onclick="AdminModule.exportExecutiveReport()">
+                  📄 Imprimir / Reporte PDF
+                </button>
+                <button class="btn btn-secondary btn-sm" id="btn-admin-export-csv" type="button" onclick="AdminModule.exportCsvData()">
+                  📥 Exportar Datos (CSV)
+                </button>
+                <button class="btn btn-warning btn-sm" id="btn-admin-emitir-alerta" type="button" onclick="AdminModule.openAlertaModal()" style="background-color: #d97706; color: white; border: none; font-weight: 600;">
+                  📢 Publicar Alerta Agrícola
+                </button>
+              </div>
+            </div>
+
+            <!-- Indicadores Clave de Salud y Monitoreo -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 20px;">
+              <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <span style="font-size: 0.76rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">Salud Fitosanitaria</span>
+                <div style="display: flex; align-items: baseline; gap: 8px; margin: 8px 0 6px;">
+                  <span style="font-size: 1.8rem; font-weight: 800; color: #16a34a;" id="admin-report-salud-pct">100%</span>
+                  <span style="font-size: 0.8rem; color: #16a34a; font-weight: 600;">Saludable</span>
+                </div>
+                <div style="width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden;">
+                  <div id="admin-report-salud-bar" style="width: 100%; height: 100%; background: #16a34a; transition: width 0.3s ease;"></div>
+                </div>
+              </div>
+
+              <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <span style="font-size: 0.76rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">Área Total Monitoreada</span>
+                <div style="margin: 8px 0 6px;">
+                  <span style="font-size: 1.8rem; font-weight: 800; color: #0284c7;" id="admin-report-area-total">0</span>
+                  <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;"> m²</span>
+                </div>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">En parcelas activas registradas</span>
+              </div>
+
+              <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <span style="font-size: 0.76rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">Afección más Recurrente</span>
+                <div style="margin: 8px 0 6px;">
+                  <span style="font-size: 1.05rem; font-weight: 700; color: #dc2626;" id="admin-report-top-amenaza">Sin afecciones</span>
+                </div>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">En diagnósticos del valle</span>
+              </div>
+
+              <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px;">
+                <span style="font-size: 0.76rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">Efectividad IA AgroVida</span>
+                <div style="margin: 8px 0 6px;">
+                  <span style="font-size: 1.8rem; font-weight: 800; color: #7c3aed;">95.2%</span>
+                </div>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Filtro botánico y detección precisa</span>
+              </div>
+            </div>
+
+            <!-- Gráfico de Cultivos y Alertas Sanitarias -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 20px;">
+              <!-- Monitoreo de Cultivos del Valle -->
+              <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 18px;">
+                <h4 style="margin: 0 0 14px; font-size: 0.95rem; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 8px;">
+                  <span>🌱</span> Distribución de Cultivos en el Valle
+                </h4>
+                <div id="admin-report-cultivos-dist" style="display: flex; flex-direction: column; gap: 10px;">
+                  <!-- Llenado dinámico -->
+                </div>
+              </div>
+
+              <!-- Alertas Fitosanitarias Oficiales -->
+              <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 18px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 8px;">
+                    <span>📢</span> Alertas Fitosanitarias Oficiales
+                  </h4>
+                  <button class="btn btn-secondary btn-sm" type="button" onclick="AdminModule.openAlertaModal()" style="font-size: 0.75rem; padding: 4px 10px;">
+                    + Nueva alerta
+                  </button>
+                </div>
+                <div id="admin-report-alertas-list" style="display: flex; flex-direction: column; gap: 10px;">
+                  <!-- Llenado dinámico -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Bitácora de Auditoría en Tiempo Real -->
+            <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 18px;">
+              <h4 style="margin: 0 0 12px; font-size: 0.95rem; font-weight: 700; color: var(--text-dark); display: flex; align-items: center; gap: 8px;">
+                <span>📋</span> Bitácora de Auditoría y Eventos del Sistema
+              </h4>
+              <div class="table-container" style="max-height: 260px; overflow-y: auto;">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Fecha y Hora</th>
+                      <th>Evento</th>
+                      <th>Usuario / Origen</th>
+                      <th>Detalle de Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-report-auditoria-body">
+                    <!-- Eventos de auditoría -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vista 1: Usuarios (Agricultores) -->
+          <div class="admin-tab-view" id="admin-view-usuarios">
+            <div class="admin-toolbar" style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+              <input type="search" id="admin-buscar-usuario" class="form-input" placeholder="Buscar agricultor por nombre, correo o ubicación..." style="margin-bottom: 0; flex: 1;">
+              <button class="btn btn-primary" id="btn-admin-nuevo-usuario" type="button" onclick="AdminModule.openNewUserModal()" style="white-space: nowrap;">
+                + Registrar Agricultor
+              </button>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Usuario / Correo</th>
+                    <th>Ubicación</th>
+                    <th>Teléfono</th>
+                    <th>Registro</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-tabla-usuarios-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Vista 2: Enfermedades -->
+          <div class="admin-tab-view" id="admin-view-enfermedades">
+            <div class="admin-toolbar" style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+              <input type="search" id="admin-buscar-enfermedad" class="form-input" placeholder="Buscar enfermedad o cultivo..." style="margin-bottom: 0; flex: 1;">
+              <button class="btn btn-primary" id="btn-admin-nueva-enfermedad-tab" type="button" onclick="document.getElementById('btn-admin-nueva-enfermedad').click()" style="white-space: nowrap;">
+                + Agregar nueva enfermedad
+              </button>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Enfermedad</th>
+                    <th>Cultivos afectados</th>
+                    <th>Fotos</th>
+                    <th>Síntomas principales</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-tabla-enfermedades-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Vista 3: Supervisión de Cultivos de Usuarios -->
+          <div class="admin-tab-view" id="admin-view-cultivos">
+            <div class="admin-toolbar">
+              <input type="search" id="admin-buscar-cultivo" class="form-input" placeholder="Buscar cultivo por nombre, variedad o agricultor...">
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Cultivo / Variedad</th>
+                    <th>Agricultor</th>
+                    <th>Área</th>
+                    <th>Fecha siembra</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-tabla-cultivos-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Vista 4: Fotos y Auditoría de Campo (Solo Admin) -->
+          <div class="admin-tab-view" id="admin-view-historial">
+            <div class="admin-toolbar" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <input type="search" id="admin-buscar-historial" class="form-input" placeholder="Buscar por agricultor, cultivo o diagnóstico..." style="margin-bottom: 0; flex: 1; min-width: 240px;">
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="font-size: 0.78rem; color: #b45309; background: #fef3c7; padding: 5px 10px; border-radius: 6px; font-weight: 600;">🔒 Auditoría de Fotos (Solo Administrador)</span>
+                <button class="btn btn-secondary btn-sm" type="button" onclick="AdminModule.exportHistoryCsv()" style="white-space: nowrap;">
+                  📥 Descargar Historial (CSV)
+                </button>
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Fotografía</th>
+                    <th>Cultivo</th>
+                    <th>Diagnóstico / Problema</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-tabla-historial-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODALES DE LA APLICACIÓN
+       ==================================================================== -->
+
+  <!-- Modal: Visor de Cámara en Vivo -->
+  <div class="modal" id="modal-camara-captura">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>📸 Capturar fotografía de la planta</h3>
+        <button class="btn-close-modal" id="btn-cerrar-camara">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+          Centra la hoja o zona afectada dentro del visor y haz clic en Capturar:
+        </p>
+
+        <div class="camera-viewfinder-box">
+          <video id="camara-video-preview" class="camera-video-element" autoplay playsinline muted></video>
+          <div class="camera-reticle"></div>
+        </div>
+
+        <div id="camara-error-msg" class="hidden" style="background-color: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 6px; margin-top: 10px; font-size: 0.85rem;"></div>
+
+        <div class="camera-controls-bar">
+          <button type="button" class="btn btn-secondary modal-close-trigger" onclick="AnalisisModule.stopCameraStream()">
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-shutter" id="btn-capturar-foto-camara">
+            📸 Tomar foto ahora
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Administrador - Agregar / Editar Enfermedad -->
+  <div class="modal" id="modal-admin-enfermedad">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3 id="admin-enf-modal-titulo">Agregar nueva enfermedad</h3>
+        <button type="button" class="btn-close-modal modal-close-trigger">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-admin-enfermedad">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label" for="admin-enf-nombre">Nombre común:</label>
+              <input type="text" id="admin-enf-nombre" class="form-input" placeholder="Ej: Roya de la arveja" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="admin-enf-cientifico">Nombre científico / Patógeno:</label>
+              <input type="text" id="admin-enf-cientifico" class="form-input" placeholder="Ej: Uromyces pisi">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label" for="admin-enf-cultivos">Cultivos afectados (separados por coma):</label>
+              <input type="text" id="admin-enf-cultivos" class="form-input" placeholder="Papa, Choclo, Haba, Arvejas, Quinua" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="admin-enf-fuente">Fuente (opcional):</label>
+              <input type="text" id="admin-enf-fuente" class="form-input" placeholder="Ej: Doctor Agro Perú">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Fotos de la enfermedad (hasta 6):</label>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+              Con estas fotos el análisis de planta reconoce la enfermedad. Sube varias tomas (hoja, tallo, fruto) con buena luz.
+            </p>
+            <div class="foto-grid" id="admin-enf-fotos-preview"></div>
+            <input type="file" id="admin-enf-fotos-input" accept="image/*" multiple class="hidden">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('admin-enf-fotos-input').click()">
+                📷 Subir fotos de este equipo
+              </button>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+              <input type="url" id="admin-enf-url-input" class="form-input" placeholder="O pega enlace/URL de imagen de Google o web (https://...)" style="margin-bottom: 0;">
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-admin-add-url-foto" style="white-space: nowrap;">
+                🌐 Agregar imagen de Google
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="admin-enf-sintomas">Síntomas característicos:</label>
+            <textarea id="admin-enf-sintomas" class="form-textarea" placeholder="Pústulas, color de manchas, apariencia..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="admin-enf-causas">Causas y condiciones ambientales:</label>
+            <textarea id="admin-enf-causas" class="form-textarea" placeholder="Temperatura, humedad excesiva, falta de aireación..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="admin-enf-prevencion">Medidas de prevención recomendadas:</label>
+            <textarea id="admin-enf-prevencion" class="form-textarea" placeholder="Rotación, densidad, semillas sanas..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="admin-enf-accion">Qué hacer si ya apareció (Tratamiento):</label>
+            <textarea id="admin-enf-accion" class="form-textarea" placeholder="Manejo orgánico o fungicidas recomendados..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="admin-enf-evitar">Prácticas que se deben evitar:</label>
+            <textarea id="admin-enf-evitar" class="form-textarea" placeholder="Riego por aspersión de noche, dejar rastrojos..."></textarea>
+          </div>
+
+          <div class="modal-footer" style="padding-right: 0; padding-left: 0; border-top: none;">
+            <button type="button" class="btn btn-secondary modal-close-trigger">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar enfermedad</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Administrador - Editar usuario -->
+  <div class="modal" id="modal-admin-usuario">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Editar usuario</h3>
+        <button type="button" class="btn-close-modal modal-close-trigger">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-admin-usuario">
+          <div class="form-group">
+            <label class="form-label" for="admin-user-nombre">Nombre completo:</label>
+            <input type="text" id="admin-user-nombre" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="admin-user-email">Correo (no se puede cambiar):</label>
+            <input type="email" id="admin-user-email" class="form-input" disabled>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label" for="admin-user-telefono">Teléfono:</label>
+              <input type="tel" id="admin-user-telefono" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="admin-user-ubicacion">Ubicación:</label>
+              <input type="text" id="admin-user-ubicacion" class="form-input">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="admin-user-estado">Estado de la cuenta:</label>
+            <select id="admin-user-estado" class="form-select">
+              <option value="activo">Activo</option>
+              <option value="suspendido">Suspendido (no podrá ingresar)</option>
+            </select>
+          </div>
+          <div class="modal-footer" style="padding-right: 0; padding-left: 0; border-top: none;">
+            <button type="button" class="btn btn-secondary modal-close-trigger">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Administrador - Registrar Nuevo Agricultor -->
+  <div class="modal" id="modal-admin-nuevo-usuario">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>+ Registrar Nuevo Agricultor</h3>
+        <button type="button" class="btn-close-modal modal-close-trigger">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-admin-nuevo-usuario">
+          <div class="form-group">
+            <label class="form-label" for="admin-newuser-nombre">Nombre y Apellidos *</label>
+            <input type="text" id="admin-newuser-nombre" class="form-input" placeholder="Ej. Juan Quispe Mamani" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="admin-newuser-email">Correo Electrónico *</label>
+            <input type="email" id="admin-newuser-email" class="form-input" placeholder="agricultor@agrovida.com" required>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label" for="admin-newuser-phone">Teléfono / WhatsApp</label>
+              <input type="tel" id="admin-newuser-phone" class="form-input" placeholder="+51 987 654 321">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="admin-newuser-location">Valle o Parcela</label>
+              <input type="text" id="admin-newuser-location" class="form-input" placeholder="Ej. Valle del Mantaro, Junín">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="admin-newuser-password">Contraseña Provisional *</label>
+            <input type="password" id="admin-newuser-password" class="form-input" value="campo123" required>
+            <small style="color: var(--text-muted); font-size: 0.78rem;">El agricultor podrá cambiarla luego al iniciar sesión.</small>
+          </div>
+          <div class="modal-footer" style="padding-right: 0; padding-left: 0; border-top: none;">
+            <button type="button" class="btn btn-secondary modal-close-trigger">Cancelar</button>
+            <button type="submit" class="btn btn-primary">+ Dar de alta en el sistema</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Administrador - Publicar Alerta Agrícola Oficial -->
+  <div class="modal" id="modal-admin-alerta">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>📢 Publicar Alerta Agrícola Oficial</h3>
+        <button type="button" class="btn-close-modal modal-close-trigger">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-admin-alerta">
+          <div class="form-group">
+            <label class="form-label" for="admin-alerta-titulo">Título del Aviso / Alerta *</label>
+            <input type="text" id="admin-alerta-titulo" class="form-input" placeholder="Ej. Riesgo inminente de Gota por humedad nocturna" required>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div class="form-group">
+              <label class="form-label" for="admin-alerta-cultivo">Cultivo Afectado *</label>
+              <select id="admin-alerta-cultivo" class="form-select" required>
+                <option value="Todos los cultivos">Todos los cultivos del valle</option>
+                <option value="Papa">Papa</option>
+                <option value="Choclo">Choclo</option>
+                <option value="Haba">Haba</option>
+                <option value="Arvejas">Arvejas</option>
+                <option value="Quinua">Quinua</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="admin-alerta-severidad">Nivel de Riesgo *</label>
+              <select id="admin-alerta-severidad" class="form-select">
+                <option value="Alta">Riesgo Alto (Urgente)</option>
+                <option value="Media" selected>Riesgo Moderado</option>
+                <option value="Preventiva">Preventivo / Informativo</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="admin-alerta-mensaje">Recomendación Técnica Oficial *</label>
+            <textarea id="admin-alerta-mensaje" class="form-textarea" rows="3" placeholder="Indica medidas preventivas o tratamientos de control inmediato recomendados para el valle..." required></textarea>
+          </div>
+          <div class="modal-footer" style="padding-right: 0; padding-left: 0; border-top: none;">
+            <button type="button" class="btn btn-secondary modal-close-trigger">Cancelar</button>
+            <button type="submit" class="btn btn-primary" style="background-color: #d97706; border-color: #d97706;">📢 Emitir Alerta Sanitaria</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Detalle de Historial (Comparación Antes / Después) -->
+  <div class="modal" id="modal-historial-detalle">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3>Evolución y Seguimiento Fitosanitario</h3>
+        <button class="btn-close-modal modal-close-trigger">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 14px;">
+          <div>
+            <strong>Cultivo: <span id="historial-modal-crop">Papa</span></strong>
+            <span style="margin: 0 8px; color: var(--text-light);">|</span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Fecha: <span id="historial-modal-date"></span></span>
+          </div>
+          <span class="status-badge" id="historial-modal-status-badge">En tratamiento</span>
+        </div>
+
+        <div class="comparison-grid">
+          <div class="comparison-box">
+            <img src="img/cultivos/hoja-enferma.jpg" alt="Fotografía anterior" id="historial-modal-img-antes">
+            <span class="comparison-label">Foto de detección inicial (Antes)</span>
+          </div>
+          <div class="comparison-box">
+            <img src="img/cultivos/hoja-sana.jpg" alt="Fotografía actual" id="historial-modal-img-despues">
+            <span class="comparison-label">Estado actual tras tratamiento (Después)</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; background-color: #f8fafc; padding: 16px; border-radius: var(--radius-md);">
+          <div>
+            <strong>Problema registrado:</strong>
+            <p id="historial-modal-problem" style="font-size: 0.9rem; color: var(--text-main); margin-top: 2px;"></p>
+          </div>
+          <div>
+            <strong>Síntomas observados:</strong>
+            <p id="historial-modal-symptoms" style="font-size: 0.88rem; color: var(--text-muted); margin-top: 2px;"></p>
+          </div>
+          <div>
+            <strong>Medidas y tratamiento aplicados:</strong>
+            <p id="historial-modal-actions" style="font-size: 0.88rem; color: var(--text-muted); margin-top: 2px;"></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+        <button type="button" class="btn btn-danger btn-sm" id="btn-eliminar-historial-modal">
+          🗑️ Eliminar esta fotografía y registro
+        </button>
+        <button class="btn btn-secondary modal-close-trigger">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Lector de Guía Agrícola Completa -->
+  <div class="modal" id="modal-guia-detalle">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-header">
+        <h3 id="guia-modal-title">Guía Agronómica</h3>
+        <button class="btn-close-modal modal-close-trigger">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 20px;">
+          <img src="img/cultivos/papa.jpg" alt="Cultivo" id="guia-modal-img" style="width: 80px; height: 80px; border-radius: var(--radius-md); object-fit: cover;">
+          <div>
+            <div style="display: flex; gap: 10px; font-size: 0.85rem;">
+              <span>⏱ Tiempo de cosecha: <strong id="guia-modal-tiempo"></strong></span>
+              <span>🌾 Rendimiento: <strong id="guia-modal-rendimiento"></strong></span>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">Manual de Buenas Prácticas Agrícolas (BPA) AgroVida.</p>
+          </div>
+        </div>
+
+        <div class="guide-reader-content">
+          <div class="guide-step-card">
+            <h4>1. Preparación del terreno</h4>
+            <p id="guia-sec-terreno"></p>
+          </div>
+          <div class="guide-step-card">
+            <h4>2. Siembra (Época y densidad)</h4>
+            <p id="guia-sec-siembra"></p>
+          </div>
+          <div class="guide-step-card">
+            <h4>3. Riego y manejo del agua</h4>
+            <p id="guia-sec-riego"></p>
+          </div>
+          <div class="guide-step-card">
+            <h4>4. Nutrición y abonamiento</h4>
+            <p id="guia-sec-nutricion"></p>
+          </div>
+          <div class="guide-step-card">
+            <h4>5. Enfermedades y plagas clave</h4>
+            <p id="guia-sec-enfermedades"></p>
+          </div>
+          <div class="guide-step-card">
+            <h4>6. Prevención</h4>
+            <p id="guia-sec-prevencion"></p>
+          </div>
+          <div class="guide-step-card">
+            <h4>7. Soluciones y manejo integrado</h4>
+            <p id="guia-sec-soluciones"></p>
+          </div>
+          <div class="guide-step-card">
+            <h4>8. Cosecha y poscosecha</h4>
+            <p id="guia-sec-cosecha"></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary modal-close-trigger">Cerrar guía</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Editar Perfil del Agricultor -->
+  <div class="modal" id="modal-editar-perfil">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Editar perfil del agricultor</h3>
+        <button class="btn-close-modal modal-close-trigger">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-editar-perfil">
+          <div class="form-group">
+            <label class="form-label" for="edit-perfil-nombre">Nombre completo:</label>
+            <input type="text" id="edit-perfil-nombre" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-perfil-email">Correo electrónico:</label>
+            <input type="email" id="edit-perfil-email" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-perfil-telefono">Teléfono / WhatsApp:</label>
+            <input type="tel" id="edit-perfil-telefono" class="form-input" placeholder="+51 987 654 321">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="edit-perfil-ubicacion">Ubicación / Parcela:</label>
+            <input type="text" id="edit-perfil-ubicacion" class="form-input" placeholder="Valle del Mantaro, Junín">
+          </div>
+          <div class="modal-footer" style="padding-right: 0; padding-left: 0; border-top: none;">
+            <button type="button" class="btn btn-secondary modal-close-trigger">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts de la Aplicación en orden -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/cultivos.js"></script>
+  <script src="js/similitud.js"></script>
+  <script src="js/analisis.js"></script>
+  <script src="js/enfermedades.js"></script>
+  <script src="js/historial.js"></script>
+  <script src="js/biblioteca.js"></script>
+  <script src="js/perfil.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" fill="none">
+  <rect width="200" height="150" rx="12" fill="#FDF3F3"/>
+  <!-- Bowl / dish outline shadow -->
+  <ellipse cx="100" cy="115" rx="75" ry="18" fill="#E8D5D5" opacity="0.6"/>
+
+  <!-- Bean pod in background -->
+  <path d="M40 50 C70 30 130 35 160 55 C135 65 75 60 40 50 Z" fill="#7CB342" stroke="#558B2F" stroke-width="2"/>
+
+  <!-- Bean cluster (rich red beans with hilum eye spot) -->
+  <!-- Bean 1 -->
+  <g transform="translate(45, 75) rotate(-20)">
+    <path d="M12 25 C7 15 15 5 30 5 C45 5 50 15 45 28 C40 40 28 42 18 38 C14 36 12 30 12 25 Z" fill="#8B1E1E" stroke="#5C1010" stroke-width="2"/>
+    <ellipse cx="25" cy="14" rx="4" ry="2" fill="#FFFFFF" opacity="0.85"/>
+  </g>
+
+  <!-- Bean 2 -->
+  <g transform="translate(85, 65) rotate(15)">
+    <path d="M12 25 C7 15 15 5 30 5 C45 5 50 15 45 28 C40 40 28 42 18 38 C14 36 12 30 12 25 Z" fill="#992222" stroke="#661414" stroke-width="2"/>
+    <ellipse cx="25" cy="14" rx="4" ry="2" fill="#FFFFFF" opacity="0.85"/>
+  </g>
+
+  <!-- Bean 3 -->
+  <g transform="translate(125, 75) rotate(-35)">
+    <path d="M12 25 C7 15 15 5 30 5 C45 5 50 15 45 28 C40 40 28 42 18 38 C14 36 12 30 12 25 Z" fill="#7A1818" stroke="#4F0F0F" stroke-width="2"/>
+    <ellipse cx="25" cy="14" rx="4" ry="2" fill="#FFFFFF" opacity="0.85"/>
+  </g>
+
+  <!-- Bean 4 (front center) -->
+  <g transform="translate(70, 85) rotate(-5)">
+    <path d="M14 28 C8 17 18 6 34 6 C50 6 56 17 50 31 C45 44 31 46 20 42 C16 40 14 34 14 28 Z" fill="#B32B2B" stroke="#6E1515" stroke-width="2.2"/>
+    <!-- Highlight glow -->
+    <path d="M22 14 C28 10 38 10 44 14" stroke="#D96363" stroke-width="2" stroke-linecap="round"/>
+    <!-- Hilum eye -->
+    <ellipse cx="28" cy="16" rx="4.5" ry="2.2" fill="#FFF5F5" stroke="#6E1515" stroke-width="0.8"/>
+  </g>
+
+  <!-- Bean 5 (front right) -->
+  <g transform="translate(108, 88) rotate(25)">
+    <path d="M12 25 C7 15 15 5 30 5 C45 5 50 15 45 28 C40 40 28 42 18 38 C14 36 12 30 12 25 Z" fill="#992222" stroke="#661414" stroke-width="2"/>
+    <ellipse cx="25" cy="14" rx="4" ry="2" fill="#FFFFFF" opacity="0.85"/>
+  </g>
+</svg>

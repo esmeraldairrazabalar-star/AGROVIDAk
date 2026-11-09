@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" fill="none">
+  <defs>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#CDE8F6"/>
+      <stop offset="0.6" stop-color="#EAF6FD"/>
+      <stop offset="1" stop-color="#FFFFFF"/>
+    </linearGradient>
+    <linearGradient id="mountGrad1" x1="0" y1="50" x2="0" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6B97A0"/>
+      <stop offset="1" stop-color="#A5C7C7"/>
+    </linearGradient>
+    <linearGradient id="mountGrad2" x1="0" y1="70" x2="0" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4B7753"/>
+      <stop offset="1" stop-color="#73A374"/>
+    </linearGradient>
+    <linearGradient id="fieldGrad" x1="0" y1="120" x2="0" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3A8E3D"/>
+      <stop offset="0.7" stop-color="#2E7D32"/>
+      <stop offset="1" stop-color="#1B5E20"/>
+    </linearGradient>
+    <linearGradient id="soilGrad" x1="380" y1="160" x2="520" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#795548"/>
+      <stop offset="1" stop-color="#3E2723"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="600" height="240" fill="url(#skyGrad)"/>
+
+  <!-- Sun rays subtle -->
+  <circle cx="280" cy="40" r="35" fill="#FFF9C4" opacity="0.6"/>
+
+  <!-- Far Mountains (Andes) -->
+  <path d="M0 130 L60 85 L140 120 L210 75 L300 130 L380 90 L460 125 L530 80 L600 120 L600 240 L0 240 Z" fill="url(#mountGrad1)" opacity="0.6"/>
+  <!-- Middle Hills -->
+  <path d="M0 145 Q80 100 180 125 T380 115 T600 135 L600 240 L0 240 Z" fill="url(#mountGrad2)" opacity="0.75"/>
+
+  <!-- Agricultural Furrows / Green Fields -->
+  <path d="M0 150 Q120 135 240 160 T480 150 T600 165 L600 240 L0 240 Z" fill="url(#fieldGrad)"/>
+  <!-- Furrow lines -->
+  <path d="M0 180 Q150 170 320 190 T600 195" stroke="#4CAF50" stroke-width="2.5" opacity="0.5"/>
+  <path d="M0 205 Q170 195 350 215 T600 220" stroke="#81C784" stroke-width="2.5" opacity="0.4"/>
+
+  <!-- Rich soil mound on the right -->
+  <ellipse cx="460" cy="215" rx="100" ry="30" fill="url(#soilGrad)"/>
+  <path d="M370 210 Q420 185 460 185 Q510 185 550 215 Z" fill="#5D4037"/>
+
+  <!-- Sprout rising from soil -->
+  <!-- Stem -->
+  <path d="M460 190 Q460 150 455 125" stroke="#4CAF50" stroke-width="5" stroke-linecap="round"/>
+  <!-- Leaf Left -->
+  <path d="M458 150 C430 140 405 155 400 170 C418 178 445 168 458 155 Z" fill="#66BB6A" stroke="#2E7D32" stroke-width="1.5"/>
+  <!-- Leaf Right (main prominent leaf) -->
+  <path d="M457 140 C485 120 525 130 535 150 C515 165 480 160 458 143 Z" fill="#81C784" stroke="#2E7D32" stroke-width="1.8"/>
+  <path d="M460 142 Q490 138 520 145" stroke="#C8E6C9" stroke-width="1.5"/>
+  <!-- Top young leaves unfolding -->
+  <path d="M455 125 C442 105 450 90 460 85 C462 100 458 115 455 125 Z" fill="#81C784"/>
+  <path d="M456 125 C470 108 485 105 490 95 C485 110 472 120 456 125 Z" fill="#A5D6A7"/>
+</svg>
